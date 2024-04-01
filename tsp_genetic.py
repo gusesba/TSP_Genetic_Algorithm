@@ -20,7 +20,7 @@ def fitness(pop, cost, rnd):
   fit = np.zeros(n)
   total = 0.0
   for i in range(n):
-    fit[i] = total_dist(pop[i], cost)
+    fit[i] = 1/total_dist(pop[i], cost)
     total += fit[i]
   fit[0] = fit[0] / total
   for i in range(n - 1):
@@ -95,8 +95,8 @@ def best_route(pop, cost):
 
 def solve(n, rnd, pop_size, max_iter, cost):
   pop = initial_state(n, rnd, pop_size)
-  print("Initial population: ")
-  print(pop)
+  #print("Initial population: ")
+  #print(pop)
   print("Initial distance: ")
   print(total_dist(best_route(pop,cost), cost))
   iteration = 0
@@ -116,9 +116,9 @@ def solve(n, rnd, pop_size, max_iter, cost):
 
 def main():
   n = 20
-  pop_size = 24
-  max_iter = 5000
-  rnd = np.random.RandomState(5)
+  pop_size = 10
+  max_iter = 2000
+  rnd = np.random.RandomState(4)
   cost = rnd.randint(1, 11, size=(n, n))
   #print(cost)
   solution = solve(n, rnd, pop_size, max_iter, cost)
