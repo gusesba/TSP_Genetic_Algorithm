@@ -1,7 +1,5 @@
 import numpy as np
 
-verbose = False
-
 def total_dist(route, cost):
   d = 0.0  # total distance between cities
   n = len(route)
@@ -69,11 +67,11 @@ def crossover(parents, pop, rnd):
 
   return new_pop
 
-def mutate(pop, rnd,mutate_rate):
+def mutate(pop, rnd):
   n = len(pop)
   for i in range(n):
     p = rnd.random()
-    if p < mutate_rate:
+    if p < 0.01:
       j = rnd.randint(len(pop[0]))
       k = rnd.randint(len(pop[0]))
       tmp = pop[i][j]
@@ -95,13 +93,12 @@ def best_route(pop, cost):
 
 
 
-def solve(n, rnd, pop_size, max_iter, cost, mutate_rate):
+def solve(n, rnd, pop_size, max_iter, cost):
   pop = initial_state(n, rnd, pop_size)
   #print("Initial population: ")
   #print(pop)
-  if verbose:
-    print("Initial distance: ")
-    print(total_dist(best_route(pop,cost), cost))
+  print("Initial distance: ")
+  print(total_dist(best_route(pop,cost), cost))
   iteration = 0
   while iteration < max_iter:
     # fitness
@@ -111,49 +108,24 @@ def solve(n, rnd, pop_size, max_iter, cost, mutate_rate):
     # crossover
     pop = crossover(parents, pop, rnd)
     # mutate
-    pop = mutate(pop, rnd, mutate_rate)
+    pop = mutate(pop, rnd)
 
     iteration += 1
   
   return best_route(pop, cost)
 
-def run(n, max_iter, pop_size, seed, mutate_rate):
-  rnd = np.random.RandomState(seed)
-  cost = rnd.randint(1, 11, size=(n, n))
-  solution = solve(n, rnd, pop_size, max_iter, cost, mutate_rate)
-
-  if verbose:
-    print("Best route: ")
-    print(solution)
-    print("Best distance: ")
-    print(total_dist(solution, cost))
-
-  return total_dist(solution, cost)
-
-def test():
-  n = 20
-  pop_size = 2
-  max_iter = 2000
-  mutate_rate = 0.00
-  seed = 1
-
-  result = np.zeros((7, 5), dtype=np.float64)
-
-  for i in range(7):
-    pop_size += 2
-    for j in range(5):
-      mutate_rate += 0.01
-      seed = 1
-      for k in range(20):
-        result[i][j] += run(n, max_iter, pop_size, seed, mutate_rate)/20.0
-        seed += 1
-  print(result)
-
 def main():
-  test()
-  
-  
-  
+  n = 20
+  pop_size = 10
+  max_iter = 2000
+  rnd = np.random.RandomState(4)
+  cost = rnd.randint(1, 11, size=(n, n))
+  #print(cost)
+  solution = solve(n, rnd, pop_size, max_iter, cost)
+  print("Best route: ")
+  print(solution)
+  print("Best distance: ")
+  print(total_dist(solution, cost))
 
 if __name__ == "__main__":
   main()
